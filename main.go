@@ -28,15 +28,18 @@ func health() map[string]bool {
 }
 
 func healthPage(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(health())
+	respondWithJSON(w, http.StatusOK, health())
 }
 
 func helloPage(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	resp := helloWorld()
+	respondWithJSON(w, http.StatusOK, resp)
+}
+
+func respondWithJSON(w http.ResponseWriter, statusCode int, payload interface{}) {
+	w.WriteHeader(statusCode)
 	w.Header().Set("Content-Type", "application/json")
 	response := map[string]interface{}{}
-	response["data"] = helloWorld()
+	response["data"] = payload
 	json.NewEncoder(w).Encode(response)
 }
