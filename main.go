@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
 
-const PORT = ":9001"
-
 func main() {
+	var PORT = getPort()
 	fmt.Printf("starting application on port %v", PORT)
 	r := mux.NewRouter()
 	r.HandleFunc("/health", healthPage)
@@ -42,4 +42,14 @@ func respondWithJSON(w http.ResponseWriter, statusCode int, payload interface{})
 	response := map[string]interface{}{}
 	response["data"] = payload
 	json.NewEncoder(w).Encode(response)
+}
+
+// Get the Port from the environment so we can run on Heroku
+func getPort() string {
+	var PORT = os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "9001"
+		fmt.Println("no port set in environment variable, using default port " + PORT)
+	}
+	return ":" + PORT
 }
