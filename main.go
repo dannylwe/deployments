@@ -15,6 +15,7 @@ func main() {
 	fmt.Printf("starting application on port %v", PORT)
 	r := mux.NewRouter()
 	r.HandleFunc("/health", healthPage)
+	r.HandleFunc("/", healthPage)
 	r.HandleFunc("/hello", helloPage)
 	log.Fatal(http.ListenAndServe(PORT, r))
 }
