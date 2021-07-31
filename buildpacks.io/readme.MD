@@ -21,3 +21,13 @@ $ pack build hello-golang --builder paketobuildpacks/builder:tiny
 $ docker run --rm -p 9001:9001 hello-golang
 ```
 - confirm application is running `curl localhost:9001/health`
+
+## Tagging existing image
+```
+$ docker tag <existing-image> <hub-user>/<repo-name>[:<tag>]
+```
+
+## Push image to Dockerhub
+```
+$ docker push <hub-user>/<repo-name>:<tag>
+```
