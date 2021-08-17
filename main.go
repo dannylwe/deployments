@@ -7,11 +7,26 @@ import (
 	"net/http"
 	"os"
 
+	"context"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
+	"github.com/lightstep/otel-launcher-go/launcher"
+	"go.opentelemetry.io/otel"
 )
 
 func main() {
 	var PORT = getPort()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	ls := launcher.ConfigureOpentelemetry(
+		launcher.WithServiceName("hello-oh-my"),
+		launcher.WithAccessToken(os.Getenv("LIGHTSTEP")),
+	)
+	defer ls.Shutdown()
+
 	fmt.Printf("starting application on port %v", PORT)
 	r := mux.NewRouter()
 	r.HandleFunc("/health", healthPage)
@@ -21,6 +36,10 @@ func main() {
 }
 
 func helloWorld() string {
+	tracer := otel.Tracer("example")
+	_, span := tracer.Start(context.Background(), "main")
+	defer span.End()
+
 	return "Hello World"
 }
 
