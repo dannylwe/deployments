@@ -43,6 +43,6 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: go-app-service
-          servicePort: 9001
+          serviceName: go-service
+          servicePort: 5070
 
