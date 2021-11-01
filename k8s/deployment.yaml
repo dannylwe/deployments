@@ -27,7 +27,7 @@ metadata:
   labels:
     run: go-app
 spec:
-type: NodePort
+  type: NodePort
   ports:
   - port: 9001
     protocol: TCP
