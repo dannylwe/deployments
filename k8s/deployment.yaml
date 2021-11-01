@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-app-deployment
+  labels:
+    app: go-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-app
+  template:
+    metadata:
+      labels:
+        app: go-app
+    spec:
+      containers:
+      - name: go-app
+        image: gcr.io/danny-test-330723/go-app
+        ports:
+        - containerPort: 9001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-app-service
+  labels:
+    run: go-app
+spec:
+type: NodePort
+  ports:
+  - port: 9001
+    protocol: TCP
+    targetPort: 9001
+  selector:
+    run: go-app
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: go-app-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: go-app-service
+          servicePort: 9001
+
